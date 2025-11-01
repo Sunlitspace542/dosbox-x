@@ -837,6 +837,7 @@ bool DOS_WriteFile(uint16_t entry,const uint8_t * data,uint16_t * amount,bool fc
     if (control->opt_headless) {
     #if defined(WIN32)
         // Bodge for Windows console host so headless output shows up
+        // TODO this fixes it for standard Windows terminal, but breaks it for MSYS (no text output). Why?
         if (!AttachConsole(ATTACH_PARENT_PROCESS)) {
             AllocConsole();
         }
