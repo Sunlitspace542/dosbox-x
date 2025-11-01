@@ -1279,14 +1279,16 @@ bool CheckQuit(void) {
     bool quit = section->Get_bool("allow quit after warning");
     if (sdl.desktop.fullscreen) GFX_SwitchFullScreen();
     /// Config option does not work. Please don't break standard system behaviour. I would like app to quit on Ctrl+C.
-    // if (warn == "true") {
-    //     if (!quit) {
-    //         systemmessagebox("Quit DOSBox-X warning", MSG_Get("QUIT_DISABLED"),"ok", "warning", 1);
-    //         return false;
-    //     } else
-    //         return systemmessagebox("Quit DOSBox-X warning", MSG_Get("QUIT_CONFIRM"),"yesno", "question", 1);
-    // } else if (warn == "false")
-        return true;
+    if (!control->opt_headless) {
+        if (warn == "true") {
+            if (!quit) {
+                systemmessagebox("Quit DOSBox-X warning", MSG_Get("QUIT_DISABLED"),"ok", "warning", 1);
+                return false;
+            } else
+                return systemmessagebox("Quit DOSBox-X warning", MSG_Get("QUIT_CONFIRM"),"yesno", "question", 1);
+        } else if (warn == "false")
+            return true;
+    }
     if (dos_kernel_disabled&&strcmp(RunningProgram, "DOSBOX-X")) {
         if (!quit) {
             systemmessagebox("Quit DOSBox-X warning", MSG_Get("QUIT_GUEST_DISABLED"),"ok", "warning", 1);
@@ -7164,6 +7166,7 @@ bool DOSBOX_parse_argv() {
             fprintf(stderr,"                                          Make sure to surround the string in quotes to cover spaces.\n");
             fprintf(stderr,"  -time-limit <n>                         Kill the emulator after 'n' seconds\n");
             fprintf(stderr,"  -fastlaunch                             Fast launch mode (skip the BIOS logo and welcome banner)\n");
+            fprintf(stderr,"  -headless                               Run DOSBox-X silently, writing stdout and stderr to the terminal.\n");
 #if C_DEBUG
             fprintf(stderr,"  -helpdebug                              Show debug-related options\n");
 #endif
@@ -7431,6 +7434,14 @@ bool DOSBOX_parse_argv() {
         else if (optname == "socket") {
             if (!control->cmdline->NextOptArgv(tmp)) return false;
             socknum = std::stoi(tmp);
+        } else if (optname == "headless") {
+            putenv(const_cast<char*>("SDL_VIDEODRIVER=dummy"));
+            putenv(const_cast<char*>("SDL_AUDIODRIVER=dummy"));
+            control->opt_headless = true;
+            control->opt_nogui = true;
+            control->opt_exit = true;
+            control->opt_nomenu = true;
+            control->opt_fastlaunch = true;
         } else {
             printf("WARNING: Unknown option %s (first parsing stage)\n",optname.c_str());
         }

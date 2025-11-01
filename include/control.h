@@ -110,8 +110,9 @@ public:
     bool opt_debug = false;
     bool opt_nogui = true;
     bool opt_nolog = false;
-    bool opt_exit = false;
+    bool opt_exit = true;
     bool opt_test = false;
+    bool opt_headless = true;
 };
 
 #endif

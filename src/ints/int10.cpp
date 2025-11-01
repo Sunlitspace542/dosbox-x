@@ -77,11 +77,14 @@ Bitu INT10_Handler(void) {
 	switch (reg_ah) {
 	case 0x00:								/* Set VideoMode */
 
-        if (first_time_set_mode)
+        if (control->opt_headless)
         {
-            /// TODO: fix initialization to not call it.
-            first_time_set_mode = false;
-            break;
+            if (first_time_set_mode)
+            {
+                /// TODO: fix initialization to not call it.
+                first_time_set_mode = false;
+                break;
+            }
         }
         //std::cout << "\033[2J" << std::flush;
         break;
