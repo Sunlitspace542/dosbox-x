@@ -17,6 +17,7 @@
  */
 
 
+#include <iostream>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
@@ -832,6 +833,16 @@ bool DOS_WriteFile(uint16_t entry,const uint8_t * data,uint16_t * amount,bool fc
 	uint16_t towrite=*amount;
 	bool ret=Files[handle]->Write(data,&towrite);
 	*amount=towrite;
+
+// Redirect all STDOUT/STDERR to terminal
+	if (entry == STDOUT) {
+		std::cout.write(reinterpret_cast<const char *>(data), *amount);
+		std::cout.flush();
+	} else if (entry == STDERR) {
+		std::cerr.write(reinterpret_cast<const char *>(data), *amount);
+		std::cerr.flush();
+	}
+
 	return ret;
 }
 

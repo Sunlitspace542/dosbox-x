@@ -960,8 +960,8 @@ void DOS_Shell::Prepare(void) {
             if(startbanner && !control->opt_fastlaunch)
                 //showWelcome(this);
                 DoCommand((char *)std::string("z:\\system\\intro welcome").c_str());
-            else if((CurMode->type == M_TEXT || IS_PC98_ARCH) && ANSI_SYS_installed())
-                WriteOut("\033[2J");
+            //else if((CurMode->type == M_TEXT || IS_PC98_ARCH) && ANSI_SYS_installed())
+            //    WriteOut("\033[2J");
             const char * extra = section->data.c_str();
 			if (extra&&!control->opt_securemode&&!control->SecureMode()&&!control->opt_noconfig) {
 				std::string vstr;
