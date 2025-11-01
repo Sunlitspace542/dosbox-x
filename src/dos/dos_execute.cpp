@@ -166,9 +166,7 @@ void DOS_Terminate(uint16_t pspseg,bool tsr,uint8_t exitcode) {
 
 // Get DOS exit code and return it to the host machine
     if (control->opt_headless) {
-        if (dos.return_code != 0) {
-            exit(1);    // I feel like it doesn't really matter if we get the exact exit code, as long as it's nonzero
-        }
+        exit(dos.return_code);
     }
 	return;
 }
