@@ -834,6 +834,20 @@ bool DOS_WriteFile(uint16_t entry,const uint8_t * data,uint16_t * amount,bool fc
 	bool ret=Files[handle]->Write(data,&towrite);
 	*amount=towrite;
 
+#if defined(WIN32)
+    if (!AttachConsole(ATTACH_PARENT_PROCESS)) {
+        AllocConsole(); // optional fallback
+    }
+
+    // Reopen std handles to the console
+    FILE* fp;
+    freopen_s(&fp, "CONOUT$", "w", stdout);
+    freopen_s(&fp, "CONOUT$", "w", stderr);
+    freopen_s(&fp, "CONIN$", "r", stdin);
+    std::ios::sync_with_stdio();
+#endif
+
+
 // Redirect all STDOUT/STDERR to terminal
 	if (entry == STDOUT) {
 		std::cout.write(reinterpret_cast<const char *>(data), *amount);
