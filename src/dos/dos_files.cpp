@@ -836,18 +836,20 @@ bool DOS_WriteFile(uint16_t entry,const uint8_t * data,uint16_t * amount,bool fc
 
     if (control->opt_headless) {
     #if defined(WIN32)
-        // Bodge for Windows console host so headless output shows up
-        // TODO this fixes it for standard Windows terminal, but breaks it for MSYS (no text output). Why?
-        if (!AttachConsole(ATTACH_PARENT_PROCESS)) {
-            AllocConsole();
-        }
+        if (!getenv("MSYSTEM")) { // Don't do all this if we're running under MSYS2
+            // Bodge for Windows console host so headless output shows up
+            // TODO this fixes it for standard Windows terminal, but breaks it for MSYS2 (no text output). Why?
+            if (!AttachConsole(ATTACH_PARENT_PROCESS)) {
+                AllocConsole();
+            }
 
-        // Reopen std handles to the console
-        FILE* fp;
-        freopen_s(&fp, "CONOUT$", "w", stdout);
-        freopen_s(&fp, "CONOUT$", "w", stderr);
-        freopen_s(&fp, "CONIN$", "r", stdin);
-        std::ios::sync_with_stdio();
+            // Reopen std handles to the console
+            FILE* fp;
+            freopen_s(&fp, "CONOUT$", "w", stdout);
+            freopen_s(&fp, "CONOUT$", "w", stderr);
+            freopen_s(&fp, "CONIN$", "r", stdin);
+            std::ios::sync_with_stdio();
+        }
     #endif
 
     // Redirect all STDOUT/STDERR to terminal
