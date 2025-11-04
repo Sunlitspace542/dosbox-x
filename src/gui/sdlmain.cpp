@@ -7434,7 +7434,8 @@ bool DOSBOX_parse_argv() {
         else if (optname == "socket") {
             if (!control->cmdline->NextOptArgv(tmp)) return false;
             socknum = std::stoi(tmp);
-        } else if (optname == "headless") {
+        }
+        else if (optname == "headless") {
             putenv(const_cast<char*>("SDL_VIDEODRIVER=dummy"));
             putenv(const_cast<char*>("SDL_AUDIODRIVER=dummy"));
             control->opt_headless = true;
