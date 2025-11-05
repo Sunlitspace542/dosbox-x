@@ -838,7 +838,6 @@ bool DOS_WriteFile(uint16_t entry,const uint8_t * data,uint16_t * amount,bool fc
     #if defined(WIN32)
         if (!getenv("MSYSTEM")) { // Don't do all this if we're running under MSYS2
             // Bodge for Windows console host so headless output shows up
-            // TODO this fixes it for standard Windows terminal, but breaks it for MSYS2 (no text output). Why?
             if (!AttachConsole(ATTACH_PARENT_PROCESS)) {
                 AllocConsole();
             }
