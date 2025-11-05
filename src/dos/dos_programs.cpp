@@ -1792,6 +1792,12 @@ int IDE_MatchCDROMDrive(char drv);
 #define _DARWIN_C_SOURCE
 #endif
 #include <sys/file.h>
+#if defined(__linux__) && !defined(__GLIBC__)
+// musl libc does not need 64 suffix to work with files > 2 GiB
+#define fopen64 fopen
+#define fseeko64 fseeko
+#define ftello64 ftello
+#endif
 #endif
 FILE *retfile = NULL;
 FILE * fopen_lock(const char * fname, const char * mode, bool &readonly) {
